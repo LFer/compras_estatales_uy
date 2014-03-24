@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+
+<!-- Vistas -->
+	<record id="view_solicitud_recursos_tree" model="ir.ui.view">
+		<field name="name">solicitud.recursos.tree</field>
+		<field name="model">solicitud.recursos</field>
+		<field name="priority" eval="1"/>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Solicitud">
+				<field name="name" />
+				<field name="company_id" />
+				<field name="user_id" />
+				<field name="state" />
+				<field name="date_end" />
+				<field name="date_start" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="view_solicitud_recursos_form" model="ir.ui.view">
+		<field name="name">solicitud.recursos.form</field>
+		<field name="model">solicitud.recursos</field>
+		<field eval="1" name="priority"/>
+		<field name="arch" type="xml">
+			<form string="Datos" version="7.0" >
+				<header>
+					<button name="button_Solicitar_Aprobacion" type="workflow" states="draft" string="Enviar Solicitud" groups="base.group_user"/>
+					<button name="button_aprobado" type="workflow" states="sent_to_approval" string="Aprobar" groups="base.group_user"/>
+					<button name="button_Cancelar" type="workflow" states="sent_to_approval" string="Rechazar" groups="base.group_user"/>
+					<button name="button_cumple_stock" type="workflow" states="approved" string="Cumple Total" groups="base.group_user"/>
+					<button name="button_no_hay_stock" type="workflow" states="approved" string="Cumple Parcial" groups="base.group_user"/>
+					<button name="button_a_comprar" type="workflow" states="closed_partial" string="A comprar" class="oe_highlight" groups="base.group_user"/>
+					<field name="state" widget="statusbar" statusbar_visible="draft,sent_to_approval,approved,rejected,closed_total,closed_partial,purchase_request" statusbar_colors='{"closed_total":"blue","purchase_request":"red"}' readonly="1"/>
+				</header>
+
+				<sheet string="Solicitud">
+						<div class="oe_edit_only">
+							<label for="name" class="oe_inline"/>
+<!--							<label for="origin" class="oe_inline"/> -->
+							<h1>
+								<field name="name" class="oe_inline" readonly="1"/>
+<!--
+								<label string="," attrs="{ 'invisible' : [ ( 'origin', '=', False ) ] }" />
+								<field name="origin" class="oe_inline" placeholder="algo así ..." />
+-->
+							</h1>
+						</div>
+					<group>
+						<group>
+							<field name="company_id" readonly="1"/>
+						</group>
+						<group>
+							<field name="date_start" />
+							<field name="date_end" />
+						</group>
+					</group>
+					<notebook>
+<!--						<page string="Solicitado" attrs="{ 'invisible' : [ ( 'state', 'in', [ 'closed_partial', 'purchase_request' ] ) ] }"> -->
+						<page string="Solicitado">
+							<field name='srl_ids_solicitado' nolabel="1" widget='one2many_list' context="" > 
+								<tree string="Solicitado" editable="bottom">
+									<field name="product_id"/>
+<!--									<field name="product_uom_id" attrs="{ 'readonly' : 'True' }" /> -->
+									<field name="product_uom_id" />
+									<field name="product_requested_qty" />
+									<field name="precio" />
+									<field name="comentarios" />
+								</tree>
+							</field> 
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+<!--
+	<record id="view_solicitud_recursos_filter" model="ir.ui.view">
+		<field name="name">solicitud.recursos.select</field>
+		<field name="model">solicitud.recursos</field>
+		<field name="arch" type="xml">
+			<search string="Search Datos">
+				<field name="name" filter_domain="[('name','ilike',self)]"/>
+			</search>
+		</field>
+	</record>
+-->
+
+<!-- Acciones -->
+	<record id="action_solicitud_recursos" model="ir.actions.act_window">
+		<field name="name">Solicitud Recursos</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">solicitud.recursos</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+<!--
+		<field name="search_view_id" ref="view_solicitud_recursos_filter"/>
+		<field name="filter" eval="True"/>
+-->
+	</record>
+
+<!-- menu -->
+	<menuitem id="menu_sr" name="Solicitud de Recursos" parent="compras_estatales_uy.menu_ce"/>
+	<menuitem id="menu_sr_1" parent="menu_sr" name="Proceso Solicitud de Recursos" action="action_solicitud_recursos"  sequence="4"/>
+</data>
+</openerp>

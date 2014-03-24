@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+		<!-- Sequences for solicitud.recursos -->
+		<record id="seq_type_resource_requisition_number" model="ir.sequence.type">
+			<field name="name">Solicitud de recursos</field>
+			<field name="code">resource.requisition.number</field>
+		</record>
+		<record id="seq_resource_requisition_number" model="ir.sequence">
+			<field name="name">Solicitud de recursos</field>
+			<field name="code">resource.requisition.number</field>
+			<field name="prefix">%(year)s-SR-</field>
+			<field name="padding">5</field>
+		</record>
+	</data>
+</openerp>

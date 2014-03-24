@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+    <record model="workflow" id="wkf_pedido_compra">
+        <field name="name">pedido.compra</field>
+        <field name="osv">pedido.compras</field>
+        <field name="on_create">True</field>
+    </record>
+<!-- ************************** activity *****************-->
+    <record model="workflow.activity" id="act_Nuevo" >
+        <field name="wkf_id" ref="wkf_pedido_compra"/>
+        <field name="name">actividad.Nuevo</field>
+        <field name="flow_start">True</field>
+    </record>
+    <record model="workflow.activity" id="act_Aprobado" >
+        <field name="wkf_id" ref="wkf_pedido_compra"/>
+        <field name="name">actividad.Aprobado</field>
+        <field name="kind">function</field>
+        <field name="action">action_Aprobado()</field>
+    </record>
+    <record model="workflow.activity" id="act_Afectado" >
+        <field name="wkf_id" ref="wkf_pedido_compra"/>
+        <field name="name">actividad.Afectado</field>
+        <field name="kind">function</field>
+        <field name="action">action_Afectado()</field>
+    </record>
+    <record model="workflow.activity" id="act_Proveedores_invitados" >
+        <field name="wkf_id" ref="wkf_pedido_compra"/>
+        <field name="name">actividad.Proveedores_invitados</field>
+        <field name="kind">function</field>
+        <field name="action">action_Proveedores_invitados()</field>
+    </record>
+    <record model="workflow.activity" id="act_Recepcion_de_ofertas" >
+        <field name="wkf_id" ref="wkf_pedido_compra"/>
+        <field name="name">actividad.Recepcion_de_ofertas</field>
+        <field name="flow_stop">True</field>
+        <field name="kind">function</field>
+        <field name="action">action_Recepcion_de_ofertas()</field>
+    </record>
+    <record model="workflow.activity" id="act_Pendiente_de_aprobacion" >
+        <field name="wkf_id" ref="wkf_pedido_compra"/>
+        <field name="name">actividad.Pendiente_de_aprobacion</field>
+        <field name="kind">function</field>
+        <field name="action">action_Pendiente_de_aprobacion()</field>
+    </record>
+    <record model="workflow.activity" id="act_Rechazado" >
+        <field name="wkf_id" ref="wkf_pedido_compra"/>
+        <field name="name">actividad.Rechazado</field>
+        <field name="flow_stop">True</field>
+        <field name="kind">function</field>
+        <field name="action">action_Rechazado()</field>
+    </record>
+<!-- ************************** transition *****************-->
+    <record model="workflow.transition" id="trans_True_2">
+        <field name="act_from" ref="act_Pendiente_de_aprobacion"/>
+        <field name="act_to" ref="act_Aprobado"/>
+        <field name="signal">button_Aprobar</field>
+        <field name="condition">True</field>
+    </record>
+    <record model="workflow.transition" id="trans_True_3">
+        <field name="act_from" ref="act_Aprobado"/>
+        <field name="act_to" ref="act_Afectado"/>
+        <field name="signal">button_Afectar</field>
+        <field name="condition">True</field>
+    </record>
+    <record model="workflow.transition" id="trans_True_4">
+        <field name="act_from" ref="act_Afectado"/>
+        <field name="act_to" ref="act_Proveedores_invitados"/>
+        <field name="signal">button_Invitar_a_proveedores</field>
+        <field name="condition">True</field>
+    </record>
+    <record model="workflow.transition" id="trans_True_5">
+        <field name="act_from" ref="act_Proveedores_invitados"/>
+        <field name="act_to" ref="act_Recepcion_de_ofertas"/>
+        <field name="signal">button_Recepcion_de_ofertas</field>
+        <field name="condition">True</field>
+    </record>
+    <record model="workflow.transition" id="trans_True_6">
+        <field name="act_from" ref="act_Nuevo"/>
+        <field name="act_to" ref="act_Pendiente_de_aprobacion"/>
+        <field name="signal">button_Solicitar_aprobacion</field>
+        <field name="condition">True</field>
+    </record>
+    <record model="workflow.transition" id="trans_True_7">
+        <field name="act_from" ref="act_Pendiente_de_aprobacion"/>
+        <field name="act_to" ref="act_Rechazado"/>
+        <field name="signal">button_Rechazar</field>
+        <field name="condition">True</field>
+    </record>
+</data>
+</openerp>

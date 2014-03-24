@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+    <menuitem id="menu_ce" name="Compras Estatales" sequence="4"/>
+</data>
+</openerp>

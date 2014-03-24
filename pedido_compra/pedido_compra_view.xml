@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+    <record id="view_pedido_compras_form" model="ir.ui.view">
+        <field name="name">new.form</field>
+        <field name="model">pedido.compras</field>
+        <field eval="1" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Datos" version="7.0" >
+                <header>
+                    <button name="button_Solicitar_aprobacion"	type="workflow" states="nuevo" string="Solicitar Aprobacion" groups="base.group_user"/>
+                    <button name="button_Aprobar" 				type="workflow" states="pendiente_de_aprobacion" string="Aprobar" groups="base.group_user"/>
+                    <button name="button_Afectar" 				type="workflow" states="aprobado" string="Afectar" groups="base.group_user"/>
+                    <button name="button_Invitar_a_proveedores" type="workflow" states="afectado" string="Invitar Proveedores" groups="base.group_user"/>
+                    <button name="button_Recepción_de_ofertas" 	type="workflow" states="proveedores_invitados" string="Recepcionar Oferta" groups="base.group_user"/>
+                    <button name="button_Rechazar" 				type="workflow" states="pendiente_de_aprobacion" string="Rechazar" groups="base.group_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="nuevo,pendiente_de_aprobacion,aprobado,afectado,proveedores_invitados,rechazado" statusbar_colors='{"cerrado":"blue"}'/>
+                </header>
+                <sheet>
+					<!--
+					<h1>
+						<field name="name" class="oe_inline"/>
+					</h1>
+					-->
+					<div class="oe_edit_only">
+						<label for="name" class="oe_inline"/>
+						<label for="origin" class="oe_inline"/>
+					</div>
+					<h1>
+						<field name="name" class="oe_inline"/>
+						<label string="," attrs="{'invisible':[('origin','=',False)]}"/>
+						<field name="origin" class="oe_inline" placeholder="e.g. PO0025"/>
+					</h1>
+					<group>
+						<group>
+							<field name="company_id" widget="selection"/>
+							<!-- <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>  -->
+						</group>
+						<group>
+							<field name="date_start"/>
+							<field name="date_end"/>
+						</group>
+					</group>
+					<notebook>
+						<page string="Products">
+							<field name="line_ids">
+								<tree string="Products" editable="bottom">
+									<field name="product_id" />
+									<field name="product_qty"/>
+									<field name="product_uom_id" />
+								</tree>
+								<form string="Products" version="7.0">
+									<group>
+										<field name="product_id" />
+										<field name="product_qty"/>
+										<field name="product_uom_id" />
+										<field name="company_id" widget="selection"/>
+									</group>
+								</form>
+							</field>  
+							<separator string="Terms and Conditions"/>	
+							<field name="description"/>
+						</page>
+					</notebook>		
+                </sheet>
+            </form>
+        </field>
+    </record>
+	
+<!-- Vista Tree -->    	
+	<record id="view_pedido_compras_tree" model="ir.ui.view">
+        <field name="name">new.tree</field>
+        <field name="model">pedido.compras</field>
+        <field eval="1" name="priority"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="datos">
+                <field name="name" />
+            </tree>
+        </field>
+	</record>	
+<!-- fichero Kanban View -->
+    <record model="ir.ui.view" id="pedido_compras_kanban_view">
+        <field name="name">new.kanban</field>
+        <field name="model">pedido.compras</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+				<templates>
+					<t t-name="kanban-box">
+						<div class="oe_kanban_details">
+							<div class="oe_kanban_partner_categories"/>
+							<div class="oe_kanban_partner_links"/>
+							<ul>
+							<li ><field name="name"/></li>
+							</ul>
+						</div>
+					</t>
+				</templates>
+            </kanban>
+        </field>
+    </record>
+
+    
+<!-- Vista Busqueda -->
+    <record id="view_pedido_compras_filter" model="ir.ui.view">
+        <field name="name">new.select</field>
+        <field name="model">pedido.compras</field>
+        <field name="arch" type="xml">
+            <search string="Search Datos">
+                <field name="name" filter_domain="[('name','ilike',self)]"/>
+            </search>
+        </field>
+    </record>
+<!-- Vista Formulario -->
+    <record id="action_pedido_compras_form" model="ir.actions.act_window">
+        <field name="name">Pedido Compra</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pedido.compras</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_pedido_compras_filter"/>
+        <field name="filter" eval="True"/>
+    </record>
+<!-- Vista Formulario -->
+    <menuitem id="menu_pc" name="Pedidos Compras" parent="menu_ce"/>
+    <menuitem id="menu_pc_1" parent="menu_pc" name="Proceso pedido Compras" action="action_pedido_compras_form"  sequence="4"/>
+</data>
+</openerp>

@@ -1,0 +1,22 @@
+{
+	"name" : "Compras Estatales",
+	"version" : "1.0",
+	"author" : "Datamatic",
+	"website" : "www.datamatic.com.uy",
+	"category" : "MRREE",
+	"description": "MRREE",
+	'depends' : ["account", "stock",],
+	"init_xml" : [],
+	"demo_xml" : [],
+	"update_xml" : [
+		'menu.xml',
+		'solicitud_recursos/solicitud_recursos_view.xml',
+		'solicitud_recursos/solicitud_recursos_workflow.xml',
+		'solicitud_recursos/solicitud_recursos_secuencia.xml',
+		'pedido_compra/pedido_compra_view.xml',
+		'pedido_compra/pedido_compra_workflow.xml',
+	],
+	"data" : [],
+	"installable": True,
+	"active": False,
+}

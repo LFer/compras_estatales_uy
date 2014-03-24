@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+	<record model="workflow" id="wkf_compra_estatales">
+		<field name="name">solicitud.recursos</field>
+		<field name="osv">solicitud.recursos</field>
+		<field name="on_create">True</field>
+	</record>
+<!-- ************************** activity *****************-->
+	<record model="workflow.activity" id="act_Solicitud_de_recursos" >
+		<field name="wkf_id" ref="wkf_compra_estatales"/>
+		<field name="name">actividad_Solicitud_de_recursos</field>
+		<field name="flow_start">True</field>
+	</record>
+	<record model="workflow.activity" id="act_Solicitar_Aprobacion" >
+		<field name="wkf_id" ref="wkf_compra_estatales"/>
+		<field name="name">actividad_Solicitar_Aprobacion</field>
+		<field name="kind">function</field>
+		<field name="action">action_Solicitar_Aprobacion()</field>
+	</record>
+	<record model="workflow.activity" id="act_Consultar_Stock" >
+		<field name="wkf_id" ref="wkf_compra_estatales"/>
+		<field name="name">actividad_Consultar_Stock</field>
+		<field name="kind">function</field>
+		<field name="action">action_Consultar_Stock()</field>
+	</record>
+	<record model="workflow.activity" id="act_Rechazado" >
+		<field name="wkf_id" ref="wkf_compra_estatales"/>
+		<field name="name">actividad_Rechazado</field>
+		<field name="flow_stop">True</field>
+		<field name="kind">function</field>
+		<field name="action">action_Rechazado()</field>
+	</record>
+	<record model="workflow.activity" id="act_Sr_Cerrada" >
+		<field name="wkf_id" ref="wkf_compra_estatales"/>
+		<field name="name">actividad_Sr_Cerrada</field>
+		<field name="flow_stop">True</field>
+		<field name="kind">function</field>
+		<field name="action">action_Sr_Cerrada()</field>
+	</record>
+	<record model="workflow.activity" id="act_Cumple_Parcial" >
+		<field name="wkf_id" ref="wkf_compra_estatales"/>
+		<field name="name">actividad_Cumple_Parcial</field>
+<!--		<field name="flow_stop">True</field> -->
+		<field name="kind">function</field>
+		<field name="action">action_Cumple_Parcial()</field>
+	</record>
+	<record model="workflow.activity" id="act_Para_Compras" >
+		<field name="wkf_id" ref="wkf_compra_estatales"/>
+		<field name="name">actividad_Para_Compras</field>
+		<field name="flow_stop">True</field>
+		<field name="kind">function</field>
+		<field name="action">action_Para_Compras()</field>
+	</record>
+
+<!-- ************************** transition *****************-->
+	<record model="workflow.transition" id="trans_SR_1">
+		<field name="act_from" ref="act_Solicitud_de_recursos"/>
+		<field name="act_to" ref="act_Solicitar_Aprobacion"/>
+		<field name="signal">button_Solicitar_Aprobacion</field>
+		<field name="condition">True</field>
+	</record>
+	<record model="workflow.transition" id="trans_SR_2">
+		<field name="act_from" ref="act_Solicitar_Aprobacion"/>
+		<field name="act_to" ref="act_Consultar_Stock"/>
+		<field name="signal">button_aprobado</field>
+		<field name="condition">True</field>
+	</record>
+	<record model="workflow.transition" id="trans_SR_3">
+		<field name="act_from" ref="act_Solicitar_Aprobacion"/>
+		<field name="act_to" ref="act_Rechazado"/>
+		<field name="signal">button_Cancelar</field>
+		<field name="condition">True</field>
+	</record>
+	<record model="workflow.transition" id="trans_SR_4">
+		<field name="act_from" ref="act_Consultar_Stock"/>
+		<field name="act_to" ref="act_Sr_Cerrada"/>
+		<field name="signal">button_cumple_stock</field>
+		<field name="condition">True</field>
+	</record>
+	<record model="workflow.transition" id="trans_SR_5">
+		<field name="act_from" ref="act_Consultar_Stock"/>
+		<field name="act_to" ref="act_Cumple_Parcial"/>
+		<field name="signal">button_no_hay_stock</field>
+		<field name="condition">True</field>
+	</record>
+	<record model="workflow.transition" id="trans_SR_6">
+		<field name="act_from" ref="act_Cumple_Parcial"/>
+		<field name="act_to" ref="act_Para_Compras"/>
+		<field name="signal">button_a_comprar</field>
+		<field name="condition">True</field>
+	</record>
+</data>
+</openerp>
